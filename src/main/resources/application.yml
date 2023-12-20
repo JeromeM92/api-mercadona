@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgresql-jeromem.alwaysdata.net/jeromem_mercadonadb
-    password: Kidcatburglar92-
-    username: jeromem
+    url: jdbc:postgresql://${ONLINE_VAR_HOST_NAME}/${ONLINE_VAR_DB_NAME}
+    password: ${ONLINE_VAR_PASSWORD}
+    username: ${ONLINE_VAR_USER_NAME}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
