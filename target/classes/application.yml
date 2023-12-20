@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresql-jeromem.alwaysdata.net/jeromem_mercadonadb
+    password: e5JxyG62dRnR88
+    username: jeromem
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  api:
+    version: 0.4.0
+
+  sprindoc:
+    swagger-ui:
+      path: /swagger-ui.html
+
+
