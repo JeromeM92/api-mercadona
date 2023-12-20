@@ -1,4 +1,4 @@
-# Projet API MERCADONA
+# Projet API MERCADONA (la partie login est en commentaire car en cours de dev et bloque actuellment pour les autres services)
 
 ## Pré-requis
 
