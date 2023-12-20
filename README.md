@@ -1,6 +1,15 @@
-Pré-requis
-Afin de pouvoir lancer le projet en local, vous devez avoir ces outils sur votre machine : - Java JDK 17 - maven
+# Projet XYZ
 
-Recommandation d'IDE
+## Pré-requis
 
-IntelliJ 
+Afin de pouvoir lancer le projet en local, assurez-vous d'avoir les outils suivants installés sur votre machine :
+
+- Java JDK 17
+- Maven
+
+## Recommandation d'IDE
+
+Nous recommandons l'utilisation de IntelliJ pour le développement de ce projet.
+
+
+
