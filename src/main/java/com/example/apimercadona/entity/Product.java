@@ -19,7 +19,8 @@ public class Product {
     private String productName;
     private Float price;
     private String description;
-    private String imageUrl;
+    @Lob
+    private byte[] image;
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
