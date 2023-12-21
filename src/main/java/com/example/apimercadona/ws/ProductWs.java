@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 public class ProductWs {
     @Autowired
     private ProductService productService;
-    @Value("${app.image.storage-directory}")
-    private String imageDirectory;
+//    @Value("${app.image.storage-directory}")
+//    private String imageDirectory;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -115,7 +115,7 @@ public class ProductWs {
                     .substring(originalFileName.lastIndexOf("."));
             String savedFileName = UUID.randomUUID().toString() + fileExtension;
 
-            Path destinationPath = Paths.get(imageDirectory + File.separator + savedFileName);
+            Path destinationPath = Paths.get(System.getenv("IMAGE_DIR") + File.separator + savedFileName);
             Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
             return savedFileName;
         }
