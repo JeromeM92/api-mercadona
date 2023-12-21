@@ -82,8 +82,8 @@ public class ProductWs {
             @RequestParam("price") Float price,
             @RequestParam("description") String description,
             @RequestParam("categoryId") Long categoryId,
-            @RequestParam("dealId") Long dealId,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+            @RequestParam(value = "dealId", required = false) Long dealId,
+            @RequestParam(value = "image") MultipartFile imageFile) {
         try {
             ProductDto productDto = new ProductDto();
             productDto.setProductName(productName);

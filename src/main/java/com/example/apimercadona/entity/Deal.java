@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Deal {
 
     @Id
@@ -23,16 +25,12 @@ public class Deal {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private Double discountPercentage;
-
-    public Deal(String dealName, LocalDate startDate, LocalDate endDate, Double discountPercentage) {
+    private Float discountPercentage;
+    public Deal(String dealName, Float discountPercentage, LocalDate startDate, LocalDate endDate) {
         this.dealName = dealName;
+        this.discountPercentage = discountPercentage;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.discountPercentage = discountPercentage;
     }
 
-    public Deal () {
-
-    }
 }
