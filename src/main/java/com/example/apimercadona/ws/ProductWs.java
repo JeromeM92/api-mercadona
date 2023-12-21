@@ -19,121 +19,110 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RequestMapping(ApiRegistration.API_REST + ApiRegistration.PRODUCT)
 @RestController
+@RequestMapping(ApiRegistration.API_REST + ApiRegistration.PRODUCT)
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductWs {
-   @Autowired
-   private ProductService productService;
+    @Autowired
+    private ProductService productService;
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private DealRepository dealRepository;
+
+    // Méthode auxiliaire pour obtenir une catégorie par son ID
     private Category getCategory(Long categoryId) {
-        if (categoryId != null) {
-            return categoryRepository.findById(categoryId).orElse(null);
-        }
-        return null;
+        return categoryId != null ? categoryRepository.findById(categoryId).orElse(null) : null;
     }
 
+    // Méthode auxiliaire pour obtenir un deal par son ID
     private Deal getDeal(Long dealId) {
-        if (dealId != null) {
-            return dealRepository.findById(dealId).orElse(null);
-        }
-        return null;
-    }
-    private String storeImage(MultipartFile file) {
-        if (file.isEmpty()) {
-            return null;
-        }
-
-        try {
-            String tempDir = System.getProperty("java.io.tmpdir");
-            Path destinationFile = Paths.get(tempDir, file.getOriginalFilename());
-            Files.copy(file.getInputStream(), destinationFile);
-
-            return destinationFile.toString();
-        } catch (Exception e) {
-            // Gérer l'exception
-            return null;
-        }
+        return dealId != null ? dealRepository.findById(dealId).orElse(null) : null;
     }
 
+    // Convertir un Product en ProductDto
+    private ProductDto convertToDto(Product product) {
+        ProductDto dto = new ProductDto();
+        dto.setProductName(product.getProductName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
+        if (product.getCategory() != null) {
+            dto.setCategoryName(product.getCategory().getCategoryName());
+        }
+        // Gestion de l'image et autres champs si nécessaire
+        return dto;
+    }
+
+    // Convertir un ProductDto en Product
+    private Product convertToEntity(ProductDto productDto) {
+        Product product = new Product();
+        product.setProductName(productDto.getProductName());
+        product.setPrice(productDto.getPrice());
+        product.setDescription(productDto.getDescription());
+        product.setCategory(getCategory(productDto.getCategoryId()));
+        product.setDeal(getDeal(productDto.getDealId()));
+        // Gestion de l'image et autres champs si nécessaire
+        return product;
+    }
+
+    // Récupérer tous les produits
     @GetMapping("/all-products")
-    public List<Product> getAllProducts() {
-
-        return productService.getAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        List<ProductDto> productDtos = products.stream().map(this::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok(productDtos);
     }
 
+    // Créer un produit
     @PostMapping("/create-product")
-    public ResponseEntity<?> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         try {
-            byte[] imageBytes = Base64.getDecoder().decode(productDto.getImageBase64());
-
-            Product product = new Product();
-            // Settez les autres champs du produit
-            product.setImage(imageBytes); // Stockez les données binaires de l'image
-            product.setProductName(productDto.getProductName());
-            product.setPrice(productDto.getPrice());
-            product.setDescription(productDto.getDescription());
-            Category category = getCategory(productDto.getCategoryId());
-            Deal deal = getDeal(productDto.getDealId());
-
-            product.setCategory(category);
-            product.setDeal(deal);
-            productService.createProduct(product);
-
-            return ResponseEntity.ok().build();
+            Product product = convertToEntity(productDto);
+            Product savedProduct = productService.createProduct(product);
+            return ResponseEntity.ok(convertToDto(savedProduct));
         } catch (Exception e) {
-            // Gérer l'exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @GetMapping("{productId}")
-    public Product getProductById(@PathVariable("productId") Long productId) {
-        return null;
+    // Récupérer un produit par son ID
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("productId") Long productId) {
+        Product product = productService.getProductById(productId);
+        if (product != null) {
+            return ResponseEntity.ok(convertToDto(product));
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    /*@PostMapping("/create-product")
-    public void createProduct(@RequestParam("productName") String productName,
-                              @RequestParam("price") Float price,
-                              @RequestParam("description") String description,
-                              @RequestParam("category") Long categoryId,
-                              @RequestParam(value = "deal", required = false) Long dealId,
-                              @RequestParam("image") MultipartFile imageFile) {
-        String imageUrl = storeImage(imageFile);
-        Product product = new Product();
-        product.setProductName(productName);
-        product.setPrice(price);
-        product.setDescription(description);
-        Category category = getCategory(categoryId);
-        Deal deal = getDeal(dealId);
-        product.setCategory(category);
-        product.setDeal(deal);
-        product.setImageUrl(imageUrl);
-
-        productService.createProduct(product);
-    }*/
-
-    @PutMapping("/update")
-    public void updateProductById(@RequestBody Product updatedProduct, @PathVariable Long productId) {
-        Product existingProduct = productService.getProductById(productId);
-
-        existingProduct.setProductName(updatedProduct.getProductName());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setImage(updatedProduct.getImage());
-        existingProduct.setCategory(updatedProduct.getCategory());
-        existingProduct.setDeal(updatedProduct.getDeal());
-
-        productService.updateProductById(existingProduct, productId);
-
+    // Mettre à jour un produit
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<ProductDto> updateProductById(@RequestBody ProductDto productDto, @PathVariable Long productId) {
+        try {
+            Product existingProduct = productService.getProductById(productId);
+            if (existingProduct == null) {
+                return ResponseEntity.notFound().build();
+            }
+            Product updatedProduct = convertToEntity(productDto);
+            updatedProduct.setProductId(productId); // Assurez-vous de conserver l'ID original
+            productService.updateProductById(updatedProduct, productId);
+            return ResponseEntity.ok(convertToDto(updatedProduct));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+    // Supprimer un produit
     @DeleteMapping("/delete/{productId}")
-    public void deleteProductById(@PathVariable Long productId) {
-        productService.deleteProductById(productId);
+    public ResponseEntity<?> deleteProductById(@PathVariable Long productId) {
+        try {
+            productService.deleteProductById(productId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
+

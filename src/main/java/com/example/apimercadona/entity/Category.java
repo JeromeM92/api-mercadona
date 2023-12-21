@@ -3,6 +3,7 @@ package com.example.apimercadona.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Category {
 
 
@@ -20,16 +22,12 @@ public class Category {
 
     private String categoryName;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
 
 
-    // Constructor
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }
 
-    public Category () {
-
-    }
 }

@@ -6,15 +6,27 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository; // Assurez-vous d'avoir un ProductRepository
 
+    @Override
+    public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+        productRepository.findAll().forEach(products::add);
+        return products;
+    }
+
+    @Override
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
 
     @Override
     public Product getProductById(Long productId) {
@@ -22,33 +34,16 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public Product updateProductById(Product product, Long productId) {
+        if (productRepository.existsById(productId)) {
+            product.setProductId(productId);
+            return productRepository.save(product);
+        }
+        return null;
+    }
+
+    @Override
     public void deleteProductById(Long productId) {
         productRepository.deleteById(productId);
-    }
-
-    @Override
-    public void updateProductById(Product product, Long productId) {
-        Product oldProduct = getProductById(productId);
-
-        if(oldProduct != null){
-            oldProduct.setProductName(product.getProductName());
-            oldProduct.setDescription(product.getDescription());
-            oldProduct.setPrice(product.getPrice());
-            oldProduct.setCategory(product.getCategory());
-            oldProduct.setDeal(product.getDeal());
-            productRepository.save(oldProduct);
-        }
-    }
-
-    @Override
-    public void createProduct(Product product) {
-
-        productRepository.save(product);
-    }
-
-    @Override
-    public List<Product> getAllProducts() {
-
-        return productRepository.findAllProducts();
     }
 }
