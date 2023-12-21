@@ -19,8 +19,7 @@ public class Product {
     private String productName;
     private Float price;
     private String description;
-    @Lob
-    private byte[] image;
+    private String imageFileName;
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;

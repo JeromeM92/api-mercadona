@@ -8,17 +8,22 @@ import com.example.apimercadona.repository.CategoryRepository;
 import com.example.apimercadona.repository.DealRepository;
 import com.example.apimercadona.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,6 +32,8 @@ import java.util.stream.Collectors;
 public class ProductWs {
     @Autowired
     private ProductService productService;
+    @Value("${app.image.storage-directory}")
+    private String imageDirectory;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -48,10 +55,10 @@ public class ProductWs {
         dto.setProductName(product.getProductName());
         dto.setPrice(product.getPrice());
         dto.setDescription(product.getDescription());
+        dto.setImageFileName(product.getImageFileName());
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getCategoryName());
         }
-        // Gestion de l'image et autres champs si nécessaire
         return dto;
     }
 
@@ -61,9 +68,9 @@ public class ProductWs {
         product.setProductName(productDto.getProductName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
+        product.setImageFileName(productDto.getImageFileName());
         product.setCategory(getCategory(productDto.getCategoryId()));
         product.setDeal(getDeal(productDto.getDealId()));
-        // Gestion de l'image et autres champs si nécessaire
         return product;
     }
 
@@ -85,12 +92,14 @@ public class ProductWs {
             @RequestParam(value = "dealId", required = false) Long dealId,
             @RequestParam(value = "image") MultipartFile imageFile) {
         try {
+            String imageFileName = saveImage(imageFile);
             ProductDto productDto = new ProductDto();
             productDto.setProductName(productName);
             productDto.setPrice(price);
             productDto.setDescription(description);
             productDto.setCategoryId(categoryId);
             productDto.setDealId(dealId);
+            productDto.setImageFileName(imageFileName);
 
             Product product = convertToEntity(productDto);
             Product savedProduct = productService.createProduct(product);
@@ -98,6 +107,19 @@ public class ProductWs {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    private String saveImage(MultipartFile imageFile) throws IOException {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String originalFileName = imageFile.getOriginalFilename();
+            String fileExtension = Objects.requireNonNull(originalFileName)
+                    .substring(originalFileName.lastIndexOf("."));
+            String savedFileName = UUID.randomUUID().toString() + fileExtension;
+
+            Path destinationPath = Paths.get(imageDirectory + File.separator + savedFileName);
+            Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            return savedFileName;
+        }
+        return null;
     }
 
     // Récupérer un produit par son ID

@@ -34,12 +34,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProductById(Product product, Long productId) {
-        if (productRepository.existsById(productId)) {
-            product.setProductId(productId);
-            return productRepository.save(product);
-        }
-        return null;
+    public Product updateProductById(Product updatedProduct, Long productId) {
+        return productRepository.findById(productId).map(existingProduct -> {
+            existingProduct.setProductName(updatedProduct.getProductName());
+            existingProduct.setPrice(updatedProduct.getPrice());
+            existingProduct.setDescription(updatedProduct.getDescription());
+            existingProduct.setImageFileName(updatedProduct.getImageFileName()); // Mise à jour du nom de fichier image
+            // ... autres propriétés à mettre à jour ...
+            return productRepository.save(existingProduct);
+        }).orElse(null);
     }
 
     @Override

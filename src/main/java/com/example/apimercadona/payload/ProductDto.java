@@ -16,6 +16,6 @@ public class ProductDto {
     private Long categoryId;
     private String categoryName;
     private Long dealId;
-    private String imageBase64;
+    private String imageFileName;
 }
 
