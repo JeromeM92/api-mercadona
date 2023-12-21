@@ -92,7 +92,9 @@ public class ProductWs {
             @RequestParam(value = "dealId", required = false) Long dealId,
             @RequestParam(value = "image") MultipartFile imageFile) {
         try {
+
             String imageFileName = saveImage(imageFile);
+            System.out.println("SALUT");
             ProductDto productDto = new ProductDto();
             productDto.setProductName(productName);
             productDto.setPrice(price);
@@ -105,18 +107,22 @@ public class ProductWs {
             Product savedProduct = productService.createProduct(product);
             return ResponseEntity.ok(convertToDto(savedProduct));
         } catch (Exception e) {
+            System.err.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     private String saveImage(MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
+            System.out.println("Image : " + imageFile.getOriginalFilename());
             String originalFileName = imageFile.getOriginalFilename();
             String fileExtension = Objects.requireNonNull(originalFileName)
                     .substring(originalFileName.lastIndexOf("."));
             String savedFileName = UUID.randomUUID().toString() + fileExtension;
 
-            Path destinationPath = Paths.get(System.getenv("IMAGE_DIR") + File.separator + savedFileName);
+            Path destinationPath = Paths.get(System.getenv("APPDATA") + File.separator + savedFileName);
             Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("SUCCESS : " + destinationPath);
             return savedFileName;
         }
         return null;
