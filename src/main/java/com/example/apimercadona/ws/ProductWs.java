@@ -77,8 +77,21 @@ public class ProductWs {
 
     // Créer un produit
     @PostMapping("/create-product")
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(
+            @RequestParam("productName") String productName,
+            @RequestParam("price") Float price,
+            @RequestParam("description") String description,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("dealId") Long dealId,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         try {
+            ProductDto productDto = new ProductDto();
+            productDto.setProductName(productName);
+            productDto.setPrice(price);
+            productDto.setDescription(description);
+            productDto.setCategoryId(categoryId);
+            productDto.setDealId(dealId);
+
             Product product = convertToEntity(productDto);
             Product savedProduct = productService.createProduct(product);
             return ResponseEntity.ok(convertToDto(savedProduct));
