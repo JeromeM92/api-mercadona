@@ -113,13 +113,14 @@ public class ProductWs {
     }
     private String saveImage(MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
+            System.out.println("Present Project Directory : "+ System.getProperty("user.dir"));
             System.out.println("Image : " + imageFile.getOriginalFilename());
             String originalFileName = imageFile.getOriginalFilename();
             String fileExtension = Objects.requireNonNull(originalFileName)
                     .substring(originalFileName.lastIndexOf("."));
             String savedFileName = UUID.randomUUID().toString() + fileExtension;
 
-            Path destinationPath = Paths.get(System.getenv("APPDATA") + File.separator + savedFileName);
+            Path destinationPath = Paths.get(System.getProperty("user.dir") + File.separator + savedFileName);
             Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
             System.out.println("SUCCESS : " + destinationPath);
