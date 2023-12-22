@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging;
-
+/*
 import com.example.apimercadona.entity.Role;
 import com.example.apimercadona.entity.TypeRole;
 import com.example.apimercadona.entity.User;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "${BASE_URL}", maxAge = 3600, allowCredentials = "true",allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/login")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -121,4 +121,4 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
     }
-}
+}*/

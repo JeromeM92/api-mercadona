@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.payload.response;
-
+/*
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageResponse {
     private String message;
-}
+}*/
 

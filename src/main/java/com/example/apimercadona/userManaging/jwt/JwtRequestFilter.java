@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.jwt;
-
+/*
 import java.io.IOException;
 
 import com.example.apimercadona.userManaging.services.UserDetailsServiceImpl;
@@ -43,4 +43,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-}
+}*/

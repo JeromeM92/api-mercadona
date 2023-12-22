@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.payload.response;
-
+/*
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +14,4 @@ public class UserInfoResponse {
     private String email;
     private List<String> roles;
 
-}
+}*/

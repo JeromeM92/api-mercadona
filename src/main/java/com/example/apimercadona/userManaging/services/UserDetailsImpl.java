@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.services;
-
+/*
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -78,4 +78,4 @@ public class UserDetailsImpl implements UserDetails {
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
-}
+}*/

@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.services;
-
+/*
 import com.example.apimercadona.entity.User;
 import com.example.apimercadona.userManaging.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,4 +21,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
-}
+}*/

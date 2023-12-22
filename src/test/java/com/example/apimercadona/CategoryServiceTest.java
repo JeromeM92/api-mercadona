@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import com.example.apimercadona.entity.Category;
 import com.example.apimercadona.repository.CategoryRepository;
 import com.example.apimercadona.service.CategoryService;
+import com.example.apimercadona.service.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +20,7 @@ public class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     @InjectMocks
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     private Category category;
 

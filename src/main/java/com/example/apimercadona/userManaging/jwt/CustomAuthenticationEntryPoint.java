@@ -1,5 +1,5 @@
 package com.example.apimercadona.userManaging.jwt;
-
+/*
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,4 +33,4 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }
-}
+}*/

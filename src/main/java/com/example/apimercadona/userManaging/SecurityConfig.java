@@ -1,6 +1,6 @@
 package com.example.apimercadona.userManaging;
 
-
+/*
 import com.example.apimercadona.userManaging.jwt.CustomAuthenticationEntryPoint;
 import com.example.apimercadona.userManaging.jwt.JwtRequestFilter;
 import com.example.apimercadona.userManaging.services.UserDetailsServiceImpl;
@@ -77,5 +77,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-}
+}*/
 
