@@ -9,6 +9,7 @@ import com.example.apimercadona.repository.DealRepository;
 import com.example.apimercadona.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -121,7 +122,7 @@ public class ProductWs {
             String savedFileName = UUID.randomUUID().toString() + fileExtension;
 
             Path destinationPath = Paths.get(System.getProperty("user.dir") + File.separator + savedFileName);
-            Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+//            Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
             System.out.println("SUCCESS : " + destinationPath);
             return savedFileName;

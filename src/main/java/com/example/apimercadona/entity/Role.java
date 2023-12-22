@@ -1,19 +1,22 @@
 package com.example.apimercadona.entity;
 
-/*
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "roles")
 @Getter
 @Setter
-@Table(name = "roles")
+@NoArgsConstructor
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long roleId;
+    private Long id;
 
-    private String name;
-}*/
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private TypeRole name;
+}
